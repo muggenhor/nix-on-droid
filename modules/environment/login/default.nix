@@ -41,6 +41,19 @@ in
         internal = true;
         description = "<literal>proot-static</literal> package.";
       };
+
+      prootStaticPkg = mkOption {
+        type = types.pathInStore;
+        description = "<literal>proot-static</literal> package.";
+        default =
+          let
+            crossCompiledPaths = {
+              aarch64-linux = "/nix/store/7qd99m1w65x2vgqg453nd70y60sm3kay-proot-termux-static-aarch64-unknown-linux-android-unstable-2024-05-04";
+              x86_64-linux = "/nix/store/pakj3svvw84rhkzdc6211yhc2cgvc21f-proot-termux-static-x86_64-unknown-linux-android-unstable-2024-05-04";
+            };
+          in
+          "${crossCompiledPaths.${targetSystem}}";
+      };
     };
 
   };
@@ -84,14 +97,7 @@ in
     environment.files = {
       inherit login loginInner;
 
-      prootStatic =
-        let
-          crossCompiledPaths = {
-            aarch64-linux = "/nix/store/7qd99m1w65x2vgqg453nd70y60sm3kay-proot-termux-static-aarch64-unknown-linux-android-unstable-2024-05-04";
-            x86_64-linux = "/nix/store/pakj3svvw84rhkzdc6211yhc2cgvc21f-proot-termux-static-x86_64-unknown-linux-android-unstable-2024-05-04";
-          };
-        in
-        "${crossCompiledPaths.${targetSystem}}";
+      prootStatic = cfg.prootStaticPkg;
     };
 
   };
